@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+    }
+    header {
+      text-align: center;
+      padding: 1rem;
+      background: #007bff;
+      color: white;
+    }
+    main {
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      box-sizing: border-box;
+    }
+    button {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .error-message {
+      text-align: center;
+      color: red;
+      font-weight: bold;
+      margin-top: 1rem;
+    }
+    .weather-info {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .weather-info img {
+      margin-top: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #f0f0f0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Weather App</h1>
+  </header>
+  <main>
+    <form id="weatherForm" method="POST">
+      <div class="form-group">
+        <label for="city">Enter City Name:</label>
+        <input type="text" id="city" name="city" placeholder="e.g., London" required />
+      </div>
+      <button type="submit">Get Weather</button>
+    </form>
+    <div id="weatherResult"></div>
+  </main>
+  <footer>
+    <p>&copy; 2024 Weather App</p>
+  </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const weatherForm = document.getElementById('weatherForm');
+      const weatherResult = document.getElementById('weatherResult');
+
+      weatherForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Prevent form from submitting normally
+        const city = document.getElementById('city').value.trim(); // Trim whitespace
+
+        if (!city) {
+          weatherResult.innerHTML = `<p style="color: red;">Please enter a valid city name.</p>`;
+          return;
+        }
+
+        // Display a loading message
+        weatherResult.innerHTML = `<div class="loading">Loading weather information...</div>`;
+
+        try {
+          // Make a request to the backend
+          const response = await fetch('weather/weather', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ city }),
+          });
+
+          const data = await response.json();
+
+          // Handle backend error message
+          if (data.message) {
+            weatherResult.innerHTML = `<p style="color: red;">${data.message}</p>`;
+            return;
+          }
+
+          // Display the weather information
+          const weather = data.weather;
+          weatherResult.innerHTML = `
+            <div class="weather-info">
+              <h2>Weather in ${weather.location.name}, ${weather.location.country}</h2>
+              <p><strong>Temperature:</strong> ${weather.current.temp_c}°C</p>
+              <p><strong>Condition:</strong> ${weather.current.condition.text}</p>
+              <p><strong>Humidity:</strong> ${weather.current.humidity}%</p>
+              <p><strong>Wind Speed:</strong> ${weather.current.wind_kph} kph</p>
+              <img src="${weather.current.condition.icon}" alt="${weather.current.condition.text}" />
+            </div>
+          `;
+      // Update search history
+      updateSearchHistory();
+        } catch (error) {
+          // Display an error message
+          weatherResult.innerHTML = `<p style="color: red;">${error.message}</p>`;
+        }
+      });
+
+      async function updateSearchHistory() {
+        try {
+          const response = await fetch('history');
+          const history = await response.json();
+          searchHistory.innerHTML = history.map(city => `<li>${city}</li>`).join('');
+        } catch (error) {
+          searchHistory.innerHTML = `<p style="color: red;">Failed to load search history.</p>`;
+        }
+      }
+
+      // Load search history on page load
+      updateSearchHistory();
+    });
+
+  </script>
+</body>
+</html>
