@@ -6,7 +6,10 @@
   "scripts": {
     "start": "nest start",
     "start:dev": "nest start --watch",
+<<<<<<< HEAD
     "start:prod": "node dist/main.js",
+=======
+>>>>>>> afc9915 (deployment 12)
     "build": "nest build"
   },
   "dependencies": {
@@ -18,7 +21,13 @@
     "@nestjs/swagger": "^7.0.6",
     "swagger-ui-express": "^4.6.3",
     "reflect-metadata": "^0.1.13",
+<<<<<<< HEAD
     "rxjs": "^7.8.1"
+=======
+    "rxjs": "^7.8.1",
+    "ejs": "^3.1.9"
+
+>>>>>>> afc9915 (deployment 12)
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.9",
@@ -58,3 +67,8 @@
     "testEnvironment": "node"
   }
 }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> afc9915 (deployment 12)
