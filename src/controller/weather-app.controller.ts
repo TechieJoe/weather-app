@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Render, Post } from '@nestjs/common';
-import { WeatherAppService } from 'src/service/weather-app.service';
+import { WeatherAppService } from '../service/weather-app.service';
 import { ApiTags, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('weather')

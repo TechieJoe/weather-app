@@ -9,6 +9,7 @@ import { WeatherAppService } from './service/weather-app.service';
     HttpModule,
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
   ],
   controllers: [WeatherAppController],
